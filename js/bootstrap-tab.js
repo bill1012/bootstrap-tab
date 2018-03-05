@@ -201,6 +201,7 @@
     //根据id设置活动tab页
     BaseTab.prototype.showTab=function (tabId) {
         this.$element.find(".nav-tabs li a[href='#" + tabId + "']").tab("show");
+        $('#' + tabId).addClass('active in');
     }
 
     //获取当前活动tab页的ID

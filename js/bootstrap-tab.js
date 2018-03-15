@@ -129,8 +129,11 @@
         this.$element.find(".nav-tabs li a i.closeable").each(function (index, item) {
             $(item).click(function () {
                 var href = $(this).parents("a").attr("href").substring(1);
-                if(self.getCurrentTabId()==href){
-                    self.$element.find(".nav-tabs li:eq(0) a").tab("show");
+                var phref = $(this).parents("a").parents("li").prev().find("a").attr("href");
+                if(phref!=null){
+	                phref = phref.substring(1);
+	                self.$element.find(".nav-tabs a[href='#" + phref + "']").tab("show");
+	                $('#' + phref).addClass('active in');
                 }
                 $(this).parents("li").remove();
                 $("#" + href).remove();
@@ -162,8 +165,11 @@
         if(obj.closeable){
             this.$element.find(".nav-tabs li a[href='#" + obj.id + "'] i.closeable").click(function () {
                 var href = $(this).parents("a").attr("href").substring(1);
-                if(self.getCurrentTabId()==href){
-                    self.$element.find(".nav-tabs li:eq(0) a").tab("show");
+                var phref = $(this).parents("a").parents("li").prev().find("a").attr("href");
+                if(phref!=null){
+	                phref = phref.substring(1);
+	                self.$element.find(".nav-tabs a[href='#" + phref + "']").tab("show");
+	                $('#' + phref).addClass('active in');
                 }
                 $(this).parents("li").remove();
                 $("#" + href).remove();
@@ -180,10 +186,21 @@
     }
     
     // 删除活动页
-    BaseTab.prototype.remove=function (tabId) {
+    BaseTab.prototype.remove=function (tabId,showId) {
     	var self=this;
+        var phref =showId;
+        if(phref == null){
+        	phref = this.$element.find(".nav-tabs li a[href='#" + tabId + "']").parents("li").prev().find("a").attr("href");
+        	if(phref != null){
+        		phref = phref.substring(1);
+        	}
+        }
         $("#" + tabId).remove();
         this.$element.find(".nav-tabs li a[href='#" + tabId + "']").parents("li").remove();
+        if(phref!=null){
+            self.$element.find(".nav-tabs a[href='#" + phref + "']").tab("show");
+            $('#' + phref).addClass('active in');
+        }
     }
     
     // 重新加载页面
@@ -201,6 +218,7 @@
     //根据id设置活动tab页
     BaseTab.prototype.showTab=function (tabId) {
         this.$element.find(".nav-tabs li a[href='#" + tabId + "']").tab("show");
+        $('#' + tabId).addClass('active in');
     }
 
     //获取当前活动tab页的ID
